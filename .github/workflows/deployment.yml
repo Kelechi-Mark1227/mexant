@@ -44,7 +44,7 @@ jobs:
         git config user.name ${GITHUB_USERNAME}
         git config user.email karlelcena@gmail.com
         git add .
-        git commit -m "updated k8s manifest to version ${{ github.run_number }}"
+        git commit -m "updated k8s manifest to the new version ${{ github.run_number }}"
         git push https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/Kelechi-Mark1227/kubernetes-manifest.git HEAD:main
 
 
