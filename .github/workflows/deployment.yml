@@ -2,7 +2,7 @@ name: cicd workflow
 on:
   push:
     branches:
-      - test
+      - main
 
 jobs:
   build-and-push:
@@ -25,7 +25,29 @@ jobs:
         run: |
           docker build -t mexant:${{ github.run_number }} .
           docker tag mexant:${{ github.run_number }} 203981192956.dkr.ecr.us-east-1.amazonaws.com/mexant:${{ github.run_number }}
-          docker push 203981192956.dkr.ecr.us-east-1.amazonaws.com/mexant:${{ github.run_number }} 
+          docker push 203981192956.dkr.ecr.us-east-1.amazonaws.com/mexant:${{ github.run_number }}   
+  
+  update-k8s-deployment-file:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: clone-k8s-yaml repo
+      env:
+        GITHUB_USERNAME: ${{ secrets.GIT_USERNAME }}
+        GITHUB_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+      run: |
+        git clone https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/Kelechi-Mark1227/kubernetes-manifest.git
+        cd kubernetes-manifest/meaxant-cluster
+        cat deployment.yaml
+        sed -i "s+203981192956.dkr.ecr.us-east-1.amazonaws.com/mexant:.*+203981192956.dkr.ecr.us-east-1.amazonaws.com/mexant:${{ github.run_number }}+g" deployment.yaml
+        cat deployment.yaml
+        git config user.name ${GITHUB_USERNAME}
+        git config user.email karlelcena@gmail.com
+        git add .
+        git commit -m "updated k8s manifest to version ${{ github.run_number }}"
+        git push https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/Kelechi-Mark1227/kubernetes-manifest.git HEAD:main
+
 
   # deploy-to-instance:
   #   needs: build-and-push
