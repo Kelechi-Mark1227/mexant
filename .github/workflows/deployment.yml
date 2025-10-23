@@ -40,7 +40,7 @@ jobs:
         cd kubernetes-manifest
         cat deployment.yml
         sed -i "s+203981192956.dkr.ecr.us-east-1.amazonaws.com/mexant:.*+203981192956.dkr.ecr.us-east-1.amazonaws.com/mexant:${{ github.run_number }}+g" deployment.yaml
-        cat deployment.yaml
+        cat deployment.yml
         git config user.name ${GITHUB_USERNAME}
         git config user.email karlelcena@gmail.com
         git add .
