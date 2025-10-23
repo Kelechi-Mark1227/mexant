@@ -38,7 +38,7 @@ jobs:
       run: |
         git clone https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/Kelechi-Mark1227/kubernetes-manifest.git
         cd kubernetes-manifest
-        cat deployment.yaml
+        cat deployment.yml
         sed -i "s+203981192956.dkr.ecr.us-east-1.amazonaws.com/mexant:.*+203981192956.dkr.ecr.us-east-1.amazonaws.com/mexant:${{ github.run_number }}+g" deployment.yaml
         cat deployment.yaml
         git config user.name ${GITHUB_USERNAME}
